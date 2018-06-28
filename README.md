@@ -17,3 +17,10 @@ JDEE Java backend
 9. In the search field enter ```jdee-server-dir```
 10. In the field next to "Jdee Server Dir:" enter the directory holding the jar from step 6 (e.g. ```~/myJars```)
 11. Click the "Apply and Save" button
+
+## Adding Beanshell
+[Beanshell](http://beanshell.org) is required for smooth working of JDEE with the JDEE server. Follow the instructions below to set up Beanshell along with JDEE Server
+
+1. Download the latest stable release of beanshell jar from http://beanshell.org/download.html
+2. Copy the jar to `jdee-server-dir` (e.g. `~/myJars`)
+
