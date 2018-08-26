@@ -4,17 +4,9 @@ import javax.tools.*;
 import javax.tools.JavaCompiler.CompilationTask;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public class JdkCompiler {
-
-    public static class CompilerOptions {
-        public final List<String> filesToCompile = new ArrayList<>();
-        public List<String> annotatedClasses;
-        public List<String> options;
-    }
 
     private JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
 

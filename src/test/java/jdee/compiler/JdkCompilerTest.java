@@ -1,6 +1,5 @@
 package jdee.compiler;
 
-import jdee.compiler.JdkCompiler.CompilerOptions;
 import org.junit.Test;
 
 import javax.tools.Diagnostic;
