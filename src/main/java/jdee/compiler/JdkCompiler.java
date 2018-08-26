@@ -6,11 +6,11 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
-public class JdkCompiler {
+class JdkCompiler {
 
     private JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
 
-    public void compile(DiagnosticListener<? super JavaFileObject> diagnosticListener, CompilerOptions options) {
+    void compile(DiagnosticListener<? super JavaFileObject> diagnosticListener, CompilerOptions options) {
         StandardJavaFileManager fileManager = getStandardFileManager(diagnosticListener);
 
         Writer additionalOutputWriter = null;
