@@ -1,5 +1,6 @@
 package jdee.compiler;
 
+import jdee.compiler.CompilerOptions.StringCode;
 import org.junit.Test;
 
 import javax.tools.Diagnostic;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class JdkCompilerTest {
 
@@ -58,7 +60,37 @@ public class JdkCompilerTest {
 
         compiler.compile(diagnosticListener, options);
 
-        assertEquals("Compiler output: " + compilerOutput, 0, compilerOutput.size());
+        assertTrue("Compiler output: " + compilerOutput, compilerOutput.isEmpty());
+    }
+
+    @Test
+    public void shouldCompileClassFromString() {
+        CompilerOptions options = new CompilerOptions();
+        options.stringCode = new StringCode("Foo", "class Foo {  }");
+        options.options = asList(
+                "-d", "./target",
+                "-source", "1.8",
+                "-Xlint:all"
+        );
+
+        compiler.compile(diagnosticListener, options);
+
+        assertTrue("Compiler output: " + compilerOutput, compilerOutput.isEmpty());
+    }
+
+    @Test
+    public void shouldFailToCompileClassFromString() {
+        CompilerOptions options = new CompilerOptions();
+        options.stringCode = new StringCode("Bar", "class Bar { aoeu; int bar(int) { return; }");
+        options.options = asList(
+                "-d", "./target",
+                "-source", "1.8",
+                "-Xlint:all"
+        );
+
+        compiler.compile(diagnosticListener, options);
+
+        assertEquals("Compiler output: " + compilerOutput, 3, compilerOutput.size());
     }
 
     private String pathTo(String filename) {
