@@ -23,6 +23,7 @@ package jde.util;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -61,7 +62,8 @@ class ProjectClasses {
    * @param classPath the project classpath
    * @exception IOException if an error occurs
    */
-  ProjectClasses(String classPath) throws IOException {
+  ProjectClasses(String classPath,
+                 String sourcePath) throws IOException {
     this.classPath = classPath;
 
     StringTokenizer st = new StringTokenizer(classPath, File.pathSeparator);
@@ -76,6 +78,19 @@ class ProjectClasses {
         }
       }
     }
+
+    st = new StringTokenizer(sourcePath, File.pathSeparator);
+    while (st.hasMoreTokens()) {
+      String classPathEntry = st.nextToken();
+      File classPathFile = new File(classPathEntry);
+      if (classPathFile.exists()) {
+        ClassPathEntry cpe = ClassPathEntry.instanceForSourceEntry(classPathFile);
+        if (cpe != null) {
+          classPathEntries.add(cpe);
+        }
+      }
+    }
+
   }
 
   /**
@@ -144,7 +159,9 @@ class ProjectClasses {
   }
 
   public static void main (String[] args) throws Exception {
-    System.out.println(new ProjectClasses(System.getProperty("java.class.path")).getClassNames(args[0]));
+    System.out.println(new ProjectClasses(System.getProperty("java.class.path"),
+                                          "").
+                           getClassNames(args[0]));
   }
 
   /**

@@ -28,7 +28,7 @@ import java.util.*;
 /**
  * This class provides various utility methods.
  *
- * @author Len Trigg (trigg@cs.waikato.ac.nz) 
+ * @author Len Trigg (trigg@cs.waikato.ac.nz)
  * @author Paul Kinnucan (paulk@mathworks.com)
  * @author Matt Conway (Matt_Conway@i2.com )
  * @author Eric D. Friedman (eric@hfriedman.rdsl.lmi.net)
@@ -45,12 +45,12 @@ public class JdeUtilities {
       threadsafe.  If we need thread saftey, we can go change all
       the emacs lisp callers to always pass in the project name */
   private static String currentProjectName = "default";
-    
+
   // Have a default one just in case
   static {
     try {
       ProjectClasses defaultProject =
-        new ProjectClasses(System.getProperty("java.class.path"));
+        new ProjectClasses(System.getProperty("java.class.path"), "");
       projectCache.put(currentProjectName,defaultProject);
     } catch (IOException e) {
       e.printStackTrace(System.err);
@@ -77,10 +77,12 @@ public class JdeUtilities {
    * @param projectClassPath a <code>String</code> value
    */
   public static void setProjectValues(String projectName,
-                                      String projectClassPath) {
+                                      String projectClassPath,
+                                      String projectSourcePath) {
     try {
       currentProjectName = projectName;
-      ProjectClasses pc = new ProjectClasses(projectClassPath);
+      ProjectClasses pc = new ProjectClasses(projectClassPath,
+                                             projectSourcePath);
       projectCache.put(projectName, pc);
     } catch (IOException e) {
       e.printStackTrace(System.err);
@@ -91,7 +93,7 @@ public class JdeUtilities {
   public static String getCurrentProjectName() {
     return currentProjectName;
   }
-    
+
   public static ProjectClasses getCurrentProjectClass() {
     return projectCache.get(currentProjectName);
   }
@@ -132,7 +134,7 @@ public class JdeUtilities {
         fqn = null;
       }
     }
-    System.out.println(NIL);              
+    System.out.println(NIL);
   }//met
 
 
@@ -163,7 +165,7 @@ public class JdeUtilities {
   public static void updateClassList() {
     updateClassList(null);
   }
- 
+
   /**
    * Looks up an unqualified class name in the class path to find possible
    * fully qualified matches.  Given `List,' this will find

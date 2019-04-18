@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2001 Eric D. Friedman (eric@hfriedman.rdsl.lmi.net)
  *
  * This program is free software; you can redistribute it and/or modify
@@ -48,7 +48,8 @@ abstract class ClassPathEntry {
     protected boolean loaded = false;
 
     private static Map<File, ClassPathEntry> entryMap = new HashMap<>();
-    
+    private static Map<File, ClassPathEntry> sourceEntryMap = new HashMap<>();
+
     ClassPathEntry () {
     }
 
@@ -65,7 +66,7 @@ abstract class ClassPathEntry {
      */
     static ClassPathEntry instanceForEntry(File resource) throws IOException {
         ClassPathEntry entry;
-        
+
         if (entryMap.containsKey(resource)) {
             entry = entryMap.get(resource);
         } else {
@@ -81,6 +82,38 @@ abstract class ClassPathEntry {
 
             if (null != entry) {
                 entryMap.put(resource,entry);
+            }
+        }
+        return entry;
+    }
+
+/**
+     * Returns the singleton/flyweight instance for
+     * <code>resource</code>.  The specific instance type returned is
+     * based on the extension of the file or on it being a directory.
+     *
+     * These entries look at source files, not class files.
+     *
+     * @param resource a <code>File</code> value
+     * @return a <code>ClassPathEntry</code> value
+     * @exception IOException if an error occurs
+     * @exception IllegalArgumentException if resource is not a
+     * zip/jar or a directory.
+     */
+    static ClassPathEntry instanceForSourceEntry(File resource) throws IOException {
+        ClassPathEntry entry;
+
+        if (sourceEntryMap.containsKey(resource)) {
+            entry = sourceEntryMap.get(resource);
+        } else {
+            if (resource.isDirectory()) {
+                entry = new SourcePathDir(resource);
+            } else {
+                entry = null;   // shouldn't be in sourcepath
+            }
+
+            if (null != entry) {
+                sourceEntryMap.put(resource,entry);
             }
         }
         return entry;
@@ -129,7 +162,7 @@ abstract class ClassPathEntry {
         }
         nameToClassMap.put(unqualified, qualifiedName);
     }
-    
+
     /**
      * Returns the list of qualified names that map to the specified
      * unqualified name.  Lazily loads the classes.
